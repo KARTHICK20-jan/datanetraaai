@@ -1,10 +1,13 @@
-# ── Compatibility patch: gradio 4.44.0 + huggingface_hub 1.x + Python 3.12/3.13 ──
+# ── Compatibility patch: gradio 4.44.0 + huggingface_hub 1.x + Python 3.12/3.13/3.14 ──
 import sys, types
 
 # Mock audioop (removed in Python 3.12+)
 for _mod in ('audioop', 'pyaudioop', '_audioop'):
-    if _mod not in sys.modules:
-        sys.modules[_mod] = types.ModuleType(_mod)
+    _mock = types.ModuleType(_mod)
+    # Add dummy functions pydub might call
+    for _fn in ('tostereo','tomono','add','bias','lin2lin','ratecv','max','minmax','avg','rms','cross'):
+        setattr(_mock, _fn, lambda *a, **kw: b'' if a and isinstance(a[0], (bytes,bytearray)) else 0)
+    sys.modules[_mod] = _mock
 
 # Mock HfFolder (removed in huggingface_hub 1.x, needed by gradio 4.44.0)
 try:
