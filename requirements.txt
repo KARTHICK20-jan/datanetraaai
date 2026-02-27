@@ -1,0 +1,14 @@
+gradio==4.44.0
+huggingface_hub==0.20.3
+gradio-client==1.3.0
+prophet
+matplotlib
+numpy
+scikit-learn
+statsmodels
+sqlalchemy
+pdfplumber
+openpyxl
+pandas>=1.5
+pymupdf
+pypdf
